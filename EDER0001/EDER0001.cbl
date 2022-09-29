@@ -26,7 +26,7 @@
       *
            SELECT EDERARQE             ASSIGN
            TO 'C:\Users\e3084\Desktop\SPARK\Cobol\EDER0001\EDERARQE.dat'
-           ORGANISATION IS             LINE SEQUENTIAL
+           ORGANIZATION IS             LINE SEQUENTIAL
            FILE STATUS                 IS WRK-FS-EDERARQE.
       *
       *================================================================*
