@@ -6,7 +6,7 @@
       *    TAMANHO....:  26                                            *
       ******************************************************************
       *                                                                *
-      *    H-OBJETICO-ARQUIVO.....: OBJETIVO DO ARQUIVO                *
+      *    H-OBJETIVO-ARQUIVO.....: OBJETIVO DO ARQUIVO                *
       *                                                                *
       *    E-DATA-MOVIMENTACAO....: DATA DA MOVIMENTACAO               *
       *    E-TIPO-MOVIMENTACAO....: TIPO DA MOVIMENTACAO - 'D' OU 'C'  *
@@ -16,7 +16,7 @@
       *                                                                *
        05  EDERWCPY-REGISTRO.
            10 EDERWCPY-HEADER.
-              15 EDERWCPY-H-OBJETICO-ARQUIVO           PIC X(25).
+              15 EDERWCPY-H-OBJETIVO-ARQUIVO           PIC X(25).
               15 FILLER                                PIC X(01).
            10 EDERWCPY-REGISTROS             REDEFINES EDERWCPY-HEADER.
               15 EDERWCPY-E-DATA-MOVIMENTACAO          PIC X(10).

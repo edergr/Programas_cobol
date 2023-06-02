@@ -25,7 +25,7 @@
        FILE-CONTROL.
       *
            SELECT EDERARQE             ASSIGN
-           TO 'C:\Users\e3084\Desktop\SPARK\Cobol\EDER0001\EDERARQE.dat'
+           TO '\home\ederrodrigues\Documentos\EDERARQE.dat'
            ORGANIZATION IS             LINE SEQUENTIAL
            FILE STATUS                 IS WRK-FS-EDERARQE.
       *
@@ -230,7 +230,7 @@
       *----------------------------------------------------------------*
       *
            DISPLAY '**************************************************'.
-           DISPLAY '* EXTRATO ' EDERWCPY-H-OBJETICO-ARQUIVO
+           DISPLAY '* EXTRATO ' EDERWCPY-H-OBJETIVO-ARQUIVO
                    '              *'.
            DISPLAY '* ---------------------------------------------- *'.
            DISPLAY '* DATA       | MOVIMENTACAO | VALOR DA TRANSACAO *'.
