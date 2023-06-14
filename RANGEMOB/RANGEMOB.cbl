@@ -1,25 +1,26 @@
       *================================================================*
        IDENTIFICATION                  DIVISION.
       *================================================================*
-       PROGRAM-ID. CADUP001.
+       PROGRAM-ID. RANGEMOB.
       *AUTHOR.     EDER GUIMARAES RODRIGUES.
       *================================================================*
-      *    PROGRAMA....:  CADUP001                                     *
+      *    PROGRAMA....:  RANGEMOB                                     *
       *    DATA........:  02/06/2023                                   *
       *----------------------------------------------------------------*
-      *    OBJETIVO....:  RECEBE ARQUIVO CADUP E MONTA DOIS ARQUIVOS   *
-      *                   SEPARANDO RANGES CORRENTES DE HISTORICOS     *
+      *    OBJETIVO....:  RECEBE ARQUIVO DE RANGE DE TELEFONIA E MONTA *
+      *                   DOIS NOVOS ARQUIVOS SEPARANDO CORRENTES DE   *
+      *                   HISTORICOS                                   *
       *----------------------------------------------------------------*
       *    ARQUIVOS....:  DDNAME                      BOOK'S           *
-      *                  CADUPENT                    CADPWDAT          *
-      *                  CADUPCOR                    CADPWDAT          *
-      *                  CADUPHIS                    CADPWDAT          *
+      *                  ARQRANGE                    RNGEWTEL          *
+      *                  RNGECORR                    RNGEWTEL          *
+      *                  RNGEHIST                    RNGEWTEL          *
       *----------------------------------------------------------------*
-      *    ARQ DESC....: CADUPENT - ARQUIVO DE ENTRADA COM TODOS OS    * 
+      *    ARQ DESC....: ARQRANGE - ARQUIVO DE ENTRADA COM TODOS OS    * 
       *                             DADOS DE RANGES DE OPERADORAS      *
-      *                  CADUPCOR - ARQUIVO DE SAIDA APENAS COM REGIS- *
+      *                  RNGECORR - ARQUIVO DE SAIDA APENAS COM REGIS- *
       *                             TROS CORRENTES                     *
-      *                  CADUPHIS - ARQUIVO DE SAIDA APENAS COM REGIS- *
+      *                  RNGEHIST - ARQUIVO DE SAIDA APENAS COM REGIS- *
       *                             TROS DE HISTORICO                  *
       *================================================================*
        ENVIRONMENT                     DIVISION.
@@ -34,20 +35,20 @@
       *----------------------------------------------------------------*
        FILE-CONTROL.
       *
-           SELECT CADUPENT             ASSIGN
-           TO '\home\ederrodrigues\Documentos\CADUPENT.dat'
+           SELECT ARQRANGE             ASSIGN
+           TO '\home\ederrodrigues\Documentos\ARQRANGE.dat'
            ORGANIZATION IS             LINE SEQUENTIAL
-           FILE STATUS                 IS WRK-FS-CADUPENT.
+           FILE STATUS                 IS WRK-FS-ARQRANGE.
       *
-           SELECT CADUPCOR             ASSIGN
-           TO '\home\ederrodrigues\Documentos\CADUPCOR.dat'
+           SELECT RNGECORR             ASSIGN
+           TO '\home\ederrodrigues\Documentos\RNGECORR.dat'
            ORGANIZATION IS             LINE SEQUENTIAL
-           FILE STATUS                 IS WRK-FS-CADUPCOR.
+           FILE STATUS                 IS WRK-FS-RNGECORR.
       *
-           SELECT CADUPHIS             ASSIGN
-           TO '\home\ederrodrigues\Documentos\CADUPHIS.dat'
+           SELECT RNGEHIST             ASSIGN
+           TO '\home\ederrodrigues\Documentos\RNGEHIST.dat'
            ORGANIZATION IS             LINE SEQUENTIAL
-           FILE STATUS                 IS WRK-FS-CADUPHIS.
+           FILE STATUS                 IS WRK-FS-RNGEHIST.
       *
       *================================================================*
        DATA                            DIVISION.
@@ -57,28 +58,28 @@
       *----------------------------------------------------------------*
       *    INPUT......: ARQUIVO DE ENTRADA: MOVIMENTACOES              *
       *----------------------------------------------------------------*
-       FD  CADUPENT
+       FD  ARQRANGE
            RECORDING MODE IS F
            BLOCK CONTAINS  0 RECORDS.
       *
-       01  FD-REG-CADUPENT             PIC  X(071).
+       01  FD-REG-ARQRANGE             PIC  X(071).
       *----------------------------------------------------------------*
-       FD  CADUPCOR
+       FD  RNGECORR
            RECORDING MODE IS F
            BLOCK CONTAINS  0 RECORDS.
       *
-       01  FD-REG-CADUPCOR             PIC  X(071).
+       01  FD-REG-RNGECORR             PIC  X(071).
       *----------------------------------------------------------------*
-       FD  CADUPHIS
+       FD  RNGEHIST
            RECORDING MODE IS F
            BLOCK CONTAINS  0 RECORDS.
       *
-       01  FD-REG-CADUPHIS             PIC  X(071).
+       01  FD-REG-RNGEHIST             PIC  X(071).
       *----------------------------------------------------------------*
        WORKING-STORAGE                 SECTION.
       *----------------------------------------------------------------*
        01  FILLER                      PIC  X(050) VALUE
-           '*** CADUP001 - INICIO DA AREA DE WORKING ***'.
+           '*** RANGEMOB - INICIO DA AREA DE WORKING ***'.
       *----------------------------------------------------------------*
        01  FILLER                      PIC  X(050) VALUE
            '*** AREA DE ACUMULADORES ***'.
@@ -102,10 +103,10 @@
            '*** AREA PARA CAMPOS AUXILIARES ***'.
       *----------------------------------------------------------------*
        01  WRK-CAMPOS-AUXILIARES.
-           05  WRK-PROGRAMA            PIC  X(008) VALUE 'CADUP001'.
-           05  WRK-FS-CADUPENT         PIC  X(002) VALUE SPACES.
-           05  WRK-FS-CADUPCOR         PIC  X(002) VALUE SPACES.
-           05  WRK-FS-CADUPHIS         PIC  X(002) VALUE SPACES.
+           05  WRK-PROGRAMA            PIC  X(008) VALUE 'RANGEMOB'.
+           05  WRK-FS-ARQRANGE         PIC  X(002) VALUE SPACES.
+           05  WRK-FS-RNGECORR         PIC  X(002) VALUE SPACES.
+           05  WRK-FS-RNGEHIST         PIC  X(002) VALUE SPACES.
            05  WRK-TIPO-REGISTRO       PIC  X(001) VALUE SPACES.
            05  WRK-FLAG-ABEND          PIC  X(001) VALUE SPACES.
                88  WRK-ABENDAR                     VALUE 'S'.
@@ -113,11 +114,11 @@
        01  FILLER                      PIC  X(050) VALUE
            '*** AREA PARA O BOOK DE ENTRADA E SAIDA ***'.
       *----------------------------------------------------------------*
-       01  WRK-AREA-CADPWDAT.
-           COPY CADPWDAT.
+       01  WRK-AREA-RNGEWTEL.
+           COPY RNGEWTEL.
       *----------------------------------------------------------------*
        01  FILLER                      PIC  X(050) VALUE
-           '*** CADUP001 - FIM DA AREA DE WORKING ***'.
+           '*** RANGEMOB - FIM DA AREA DE WORKING ***'.
       *================================================================*
        PROCEDURE                       DIVISION.
       *================================================================*
@@ -129,8 +130,8 @@
            PERFORM 1000-INICIALIZAR.
            PERFORM 1100-TESTAR-FS.
            PERFORM 1200-VERIFICAR-VAZIO.
-           PERFORM 1300-LER-CADUPENT.
-           PERFORM 2000-PROCESSAR      UNTIL WRK-FS-CADUPENT EQUAL '10'.
+           PERFORM 1300-LER-ARQRANGE.
+           PERFORM 2000-PROCESSAR      UNTIL WRK-FS-ARQRANGE EQUAL '10'.
            PERFORM 3000-FINALIZAR.
       *
       *----------------------------------------------------------------*
@@ -141,8 +142,8 @@
        1000-INICIALIZAR                SECTION.
       *----------------------------------------------------------------*
       *
-           OPEN INPUT CADUPENT.
-               OUTPUT CADUPCOR CADUPHIS.
+           OPEN INPUT ARQRANGE.
+               OUTPUT RNGECORR RNGEHIST.
       *
            MOVE WRK-ABERTURA           TO WRK-OPERACAO.
       *
@@ -154,23 +155,23 @@
        1100-TESTAR-FS                  SECTION.
       *----------------------------------------------------------------*
       *
-           PERFORM 1110-TESTAR-FS-CADUPENT.
-           PERFORM 1120-TESTAR-FS-CADUPCOR.
-           PERFORM 1130-TESTAR-FS-CADUPHIS.
+           PERFORM 1110-TESTAR-FS-ARQRANGE.
+           PERFORM 1120-TESTAR-FS-RNGECORR.
+           PERFORM 1130-TESTAR-FS-RNGEHIST.
       *
       *----------------------------------------------------------------*
        1100-99-FIM.                    EXIT.
       *----------------------------------------------------------------*
-      *    ROTINA DE TESTE DE FILE-STATUS DO ARQUIVO CADUPENT          *
+      *    ROTINA DE TESTE DE FILE-STATUS DO ARQUIVO ARQRANGE          *
       *----------------------------------------------------------------*
-       1110-TESTAR-FS-CADUPENT         SECTION.
+       1110-TESTAR-FS-ARQRANGE         SECTION.
       *----------------------------------------------------------------*
       *
-           IF (WRK-FS-CADUPENT         NOT EQUAL '00')
+           IF (WRK-FS-ARQRANGE         NOT EQUAL '00')
                DISPLAY '************** ' WRK-PROGRAMA ' **************'.
                DISPLAY '*      ERRO ' WRK-OPERACAO ' O ARQUIVO      *'.
-               DISPLAY '*              CADUPENT              *'.
-               DISPLAY '*          FILE STATUS = ' WRK-FS-CADUPENT
+               DISPLAY '*              ARQRANGE              *'.
+               DISPLAY '*          FILE STATUS = ' WRK-FS-ARQRANGE
                                                  '          *'.
                DISPLAY '************** ' WRK-PROGRAMA ' **************'.
                PERFORM 9000-PROCESSAR-TIPO-ERRO.
@@ -179,16 +180,16 @@
       *----------------------------------------------------------------*
        1110-99-FIM.                    EXIT.
       *----------------------------------------------------------------**
-      *    ROTINA DE TESTE DE FILE-STATUS DO ARQUIVO CADUPCOR          *
+      *    ROTINA DE TESTE DE FILE-STATUS DO ARQUIVO RNGECORR          *
       *----------------------------------------------------------------*
-       1120-TESTAR-FS-CADUPCOR         SECTION.
+       1120-TESTAR-FS-RNGECORR         SECTION.
       *----------------------------------------------------------------*
       *
-           IF (WRK-FS-CADUPCOR         NOT EQUAL '00')
+           IF (WRK-FS-RNGECORR         NOT EQUAL '00')
                DISPLAY '************** ' WRK-PROGRAMA ' **************'.
                DISPLAY '*      ERRO ' WRK-OPERACAO ' O ARQUIVO      *'.
-               DISPLAY '*              CADUPCOR              *'.
-               DISPLAY '*          FILE STATUS = ' WRK-FS-CADUPCOR
+               DISPLAY '*              RNGECORR              *'.
+               DISPLAY '*          FILE STATUS = ' WRK-FS-RNGECORR
                                                  '          *'.
                DISPLAY '************** ' WRK-PROGRAMA ' **************'.
                PERFORM 9000-PROCESSAR-TIPO-ERRO.
@@ -197,16 +198,16 @@
       *----------------------------------------------------------------*
        1120-99-FIM.                    EXIT.
       *----------------------------------------------------------------*       
-      *    ROTINA DE TESTE DE FILE-STATUS DO ARQUIVO CADUPHIS          *
+      *    ROTINA DE TESTE DE FILE-STATUS DO ARQUIVO RNGEHIST          *
       *----------------------------------------------------------------*
-       1130-TESTAR-FS-CADUPHIS         SECTION.
+       1130-TESTAR-FS-RNGEHIST         SECTION.
       *----------------------------------------------------------------*
       *
-           IF (WRK-FS-CADUPHIS         NOT EQUAL '00')
+           IF (WRK-FS-RNGEHIST         NOT EQUAL '00')
                DISPLAY '************** ' WRK-PROGRAMA ' **************'.
                DISPLAY '*      ERRO ' WRK-OPERACAO ' O ARQUIVO      *'.
-               DISPLAY '*              CADUPHIS              *'.
-               DISPLAY '*          FILE STATUS = ' WRK-FS-CADUPHIS
+               DISPLAY '*              RNGEHIST              *'.
+               DISPLAY '*          FILE STATUS = ' WRK-FS-RNGEHIST
                                                  '          *'.
                DISPLAY '************** ' WRK-PROGRAMA ' **************'.
                PERFORM 9000-PROCESSAR-TIPO-ERRO.
@@ -220,12 +221,12 @@
        1200-VERIFICAR-VAZIO            SECTION.
       *----------------------------------------------------------------*
       *
-           PERFORM 1300-LER-CADUPENT.
+           PERFORM 1300-LER-ARQRANGE.
       *
-           IF (WRK-FS-CADUPENT         EQUAL '10')
+           IF (WRK-FS-ARQRANGE         EQUAL '10')
                DISPLAY '************** ' WRK-PROGRAMA ' **************'.
                DISPLAY '*                                    *'.
-               DISPLAY '*     ARQUIVO CADUPENT ESTA VAZIO    *'.
+               DISPLAY '*     ARQUIVO ARQRANGE ESTA VAZIO    *'.
                DISPLAY '*      PROCESSAMENTO ENCERRADO       *'.
                DISPLAY '*                                    *'.
                DISPLAY '************** ' WRK-PROGRAMA ' **************'.
@@ -234,18 +235,18 @@
       *----------------------------------------------------------------*
        1200-99-FIM.                    EXIT.
       *----------------------------------------------------------------*
-      *    LER ARQUIVO DE ENTRADA CADUPENT                             *
+      *    LER ARQUIVO DE ENTRADA ARQRANGE                             *
       *----------------------------------------------------------------*
-       1300-LER-CADUPENT               SECTION.
+       1300-LER-ARQRANGE               SECTION.
       *----------------------------------------------------------------*
       *
-           READ CADUPENT               INTO WRK-AREA-CADPWDAT.
+           READ ARQRANGE               INTO WRK-AREA-RNGEWTEL.
       *
-           IF  (WRK-FS-CADUPENT        EQUAL '10')
+           IF  (WRK-FS-ARQRANGE        EQUAL '10')
                CONTINUE.
            ELSE
                MOVE WRK-LEITURA        TO WRK-OPERACAO.
-               PERFORM 1110-TESTAR-FS-CADUPENT.
+               PERFORM 1110-TESTAR-FS-ARQRANGE.
                ADD  1                  TO ACU-REG-LIDOS.
            END-IF.
       *
@@ -265,7 +266,7 @@
                PERFORM 2300-GRAVA-HISTORICO.
            END-IF.
       *     
-           PERFORM 1300-LER-CADUPENT.
+           PERFORM 1300-LER-ARQRANGE.
       *
       *----------------------------------------------------------------*
        2000-99-FIM.                    EXIT.
@@ -275,7 +276,7 @@
        2100-VERIFICA-REGISTRO          SECTION.
       *----------------------------------------------------------------*
       *
-           IF (CADPWDAT-DATA-FINAL     EQUAL SPACES)
+           IF (RNGEWTEL-DATA-FINAL     EQUAL SPACES)
                MOVE 'C'                TO WRK-TIPO-REGISTRO
            ELSE
                MOVE 'H'                TO WRK-TIPO-REGISTRO
@@ -289,10 +290,10 @@
        2200-GRAVA-CORRENTE             SECTION.
       *----------------------------------------------------------------*
       *
-           WRITE FD-REG-CADUPCOR       FROM WRK-AREA-CADPWDAT.
+           WRITE FD-REG-RNGECORR       FROM WRK-AREA-RNGEWTEL.
            MOVE WRK-GRAVACAO           TO WRK-OPERACAO.
       *
-           PERFORM 1120-TESTAR-FS-CADUPCOR.
+           PERFORM 1120-TESTAR-FS-RNGECORR.
       *
            ADD  1                      TO ACU-REG-GRAVADOS-CORR.
       *
@@ -304,10 +305,10 @@
        2300-GRAVA-HISTORICO            SECTION.
       *----------------------------------------------------------------*
       *
-           WRITE FD-REG-CADUPHIS       FROM WRK-AREA-CADPWDAT.
+           WRITE FD-REG-RNGEHIST       FROM WRK-AREA-RNGEWTEL.
            MOVE WRK-GRAVACAO           TO WRK-OPERACAO.
       *
-           PERFORM 1130-TESTAR-FS-CADUPHIS.
+           PERFORM 1130-TESTAR-FS-RNGEHIST.
       *
            ADD  1                      TO ACU-REG-GRAVADOS-HIST.
       *
@@ -319,7 +320,7 @@
        3000-FINALIZAR                  SECTION.
       *----------------------------------------------------------------*
       *
-           CLOSE  CADUPENT.
+           CLOSE  ARQRANGE.
       *
            MOVE WRK-FECHAMENTO         TO WRK-OPERACAO.
       *
@@ -339,13 +340,13 @@
                   ' ********************'.
            DISPLAY '*         ESTATISTICAS DE PROCESSAMENTO          *'.
            DISPLAY '*------------------------------------------------*'.
-           DISPLAY '* CADUP001 | I/O | DESC. ARQUIVO | QUANTID.      *'.
+           DISPLAY '* RANGEMOB | I/O | DESC. ARQUIVO | QUANTID.      *'.
            DISPLAY '*------------------------------------------------*'.
-           DISPLAY '* CADUPENT |  I  | TOTAL REG.    | ' ACU-REG-LIDOS
+           DISPLAY '* ARQRANGE |  I  | TOTAL REG.    | ' ACU-REG-LIDOS
            '     *'.
-           DISPLAY '* CADUPCOR |  O  | TOTAL REG.    | ' 
+           DISPLAY '* RNGECORR |  O  | TOTAL REG.    | ' 
            ACU-REG-GRAVADOS-CORR '     *'.
-           DISPLAY '* CADUPHIS |  O  | TOTAL REG.    | ' 
+           DISPLAY '* RNGEHIST |  O  | TOTAL REG.    | ' 
            ACU-REG-GRAVADOS-HIST '     *'.
            DISPLAY '******************** ' WRK-PROGRAMA
                   ' ********************'.
